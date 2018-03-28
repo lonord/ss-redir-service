@@ -1,0 +1,30 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "semicolon":[
+            true,
+            "never"
+        ],
+        "quotemark": [
+            true,
+            "single",
+            "jsx-double"
+        ],
+        "indent": [
+            true,
+            "tabs"
+        ],
+        "no-console": false,
+        "interface-name": false,
+        "radix": false,
+        "trailing-comma": false,
+        "align": false,
+        "no-unused-expression": false,
+        "object-literal-sort-keys": false
+    },
+    "rulesDirectory": []
+}

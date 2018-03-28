@@ -1,0 +1,35 @@
+{
+  "name": "@lonord/ss-redir-service",
+  "version": "1.0.0",
+  "description": "Shadowsocks transparent proxy service",
+  "main": "lib/",
+  "types": "lib/",
+  "scripts": {
+    "build": "rimraf lib && tsc",
+    "build4debug": "rimraf lib && tsc -d --inlineSourceMap",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lonord/ss-redir-service.git"
+  },
+  "keywords": [
+    "shadowsocks",
+    "proxy"
+  ],
+  "author": "Loy B. <lonord@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lonord/ss-redir-service/issues"
+  },
+  "homepage": "https://github.com/lonord/ss-redir-service#readme",
+  "devDependencies": {
+    "@types/node": "^9.4.6",
+    "rimraf": "^2.6.2",
+    "tslint": "^5.9.1",
+    "typescript": "^2.8.1"
+  },
+  "dependencies": {
+    "commander": "^2.15.1"
+  }
+}
