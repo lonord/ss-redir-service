@@ -1,0 +1,5 @@
+{
+	"sync-rsync.delete": true,
+	"sync-rsync.remote": "root@lonord.name:/root/node-proj/ss-redir-service/",
+	"sync-rsync.shell": "ssh -p 12022"
+}
