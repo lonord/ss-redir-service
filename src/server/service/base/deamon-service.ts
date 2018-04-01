@@ -2,11 +2,8 @@ import { ChildProcess, spawn } from 'child_process'
 import { arch, platform } from 'os'
 import { join } from 'path'
 import { isArray, isFunction, isString } from 'util'
+import { binDir } from '../util/util'
 import createBaseService, { BaseService, BaseServiceOption } from './base-service'
-
-const osType = platform()
-const cpuArch = arch()
-const binDir = join(__dirname, '../../../../assets/bin', cpuArch)
 
 export interface DeamonService extends BaseService {
 	getChildProcess(): ChildProcess

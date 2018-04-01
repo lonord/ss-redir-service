@@ -1,5 +1,5 @@
 ################################## ss-redir-service configuration ##############################
-# ss server host
+# ss server host ip
 serverHost: '1.2.3.4'
 
 # ss server port
