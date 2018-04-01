@@ -1,0 +1,44 @@
+################################## ss-redir-service configuration ##############################
+# ss server host
+serverHost: '1.2.3.4'
+
+# ss server port
+serverPort: 444
+
+# ss local listen port
+localPort: 1080
+
+# ss secret
+secret: 'yoursecret'
+
+# ss encrypt medhod
+encryptMethod: 'chacha20'
+
+# addrs no redirect
+# excludeIPList:
+#   - '123.456.789.111'
+
+# ipset set name for auto redirect, default gfwlist
+# gfwIpsetName: 'gfwlist'
+
+# port to forward dns, default 30053
+# dnsTunPort: 30053
+
+# dnsmasq configure file directory, default /etc/dnsmasq.d
+# dnsmasqConfigDir: '/etc/dnsmasq.d'
+
+# command to reload dnsmasq, default 'service dnsmasq restart'
+# dnsmasqReloadCommand: 'service dnsmasq restart'
+
+################################## KcpTun configuration ##############################
+# is use kcptun, default false
+# enableKcpTun: false
+
+# kcptun remote server
+# kcpTunRemote: '1.2.3.4:123'
+
+# kcptun local listen port
+# kcpTunLocalPort: 10444
+
+# kcptun additional arguments
+# kcpTunArgs: '--mode fast2 --crypt none --sndwnd 2048 --rcvwnd 2048 --datashard 70 --parityshard 30 --dscp 46'

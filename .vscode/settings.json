@@ -1,5 +1,11 @@
 {
 	"sync-rsync.delete": true,
-	"sync-rsync.remote": "root@lonord.name:/root/node-proj/ss-redir-service/",
-	"sync-rsync.shell": "ssh -p 12022"
+	"sync-rsync.executableShell": "/bin/bash",
+	"sync-rsync.remote": "root@pi3.local:/root/node-proj/ss-redir-service/",
+	"sync-rsync.flags": "az",
+	"sync-rsync.exclude": [
+		".git",
+		".vscode",
+		"node_modules"
+	]
 }

@@ -8,7 +8,7 @@
     "build": "rimraf lib && tsc -d",
     "build4debug": "rimraf lib && tsc --inlineSourceMap",
     "prepublishOnly": "npm run build",
-    "postinstall": "node lib/scripts/postinstall.js"
+    "postinstall": "node scripts/postinstall.js"
   },
   "repository": {
     "type": "git",
@@ -25,15 +25,21 @@
   },
   "homepage": "https://github.com/lonord/ss-redir-service#readme",
   "devDependencies": {
+    "@types/lodash": "^4.14.106",
     "@types/mkdirp": "^0.5.2",
     "@types/node": "^9.4.6",
+    "@types/pidusage": "^1.1.1",
     "@types/rimraf": "^2.0.2",
+    "@types/yamljs": "^0.2.30",
     "tslint": "^5.9.1",
     "typescript": "^2.8.1"
   },
   "dependencies": {
-    "rimraf": "^2.6.2",
     "commander": "^2.15.1",
-    "mkdirp": "^0.5.1"
+    "lodash": "^4.17.5",
+    "mkdirp": "^0.5.1",
+    "pidusage": "^2.0.6",
+    "rimraf": "^2.6.2",
+    "yamljs": "^0.3.0"
   }
 }
