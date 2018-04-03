@@ -3,17 +3,14 @@ import { writeFile } from 'fs'
 import { tmpdir } from 'os'
 import { join } from 'path'
 import { promisify } from 'util'
+import { SSMode, SSNatMethods } from '../../../types'
+import { binDir } from '../../util/util'
 import createBaseService, { BaseService, BaseServiceOption } from '../base/base-service'
-import { SSMode } from '../util/config'
-import { binDir } from '../util/util'
 
 const execAsync = promisify(exec)
 const writeFileAsync = promisify(writeFile)
 
-export interface SSNatService extends BaseService {
-	getSSMode(): SSMode
-	setSSMode(mode: SSMode)
-}
+export type SSNatService = BaseService & SSNatMethods
 
 export default function createSSNatService(option: BaseServiceOption): SSNatService {
 	const c = option.config
@@ -61,6 +58,9 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 			if (sup.isRunning()) {
 				setNatRules().catch((err) => console.error('update ss mode error: ', err))
 			}
+			option.settingManager.updateSetting({
+				ssMode
+			})
 		}
 	}
 }

@@ -2,7 +2,7 @@ import { ChildProcess, spawn } from 'child_process'
 import { arch, platform } from 'os'
 import { join } from 'path'
 import { isArray, isFunction, isString } from 'util'
-import { binDir } from '../util/util'
+import { binDir } from '../../util/util'
 import createBaseService, { BaseService, BaseServiceOption } from './base-service'
 
 export interface DeamonService extends BaseService {

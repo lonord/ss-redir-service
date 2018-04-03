@@ -1,4 +1,4 @@
-import { ConfigProps, SettingManager } from '../util/config'
+import { ConfigProps, SettingManager } from '../../util/config'
 
 export interface BaseService {
 	start()

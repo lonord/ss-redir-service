@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "commander": "^2.15.1",
+    "json-ipc-lib": "^1.0.3",
     "lodash": "^4.17.5",
     "mkdirp": "^0.5.1",
     "pidusage": "^2.0.6",

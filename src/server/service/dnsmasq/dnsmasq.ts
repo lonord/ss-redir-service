@@ -3,18 +3,13 @@ import { writeFile } from 'fs'
 import * as _ from 'lodash'
 import { join } from 'path'
 import { promisify } from 'util'
+import { DnsmasqMethods } from '../../../types'
 import { BaseServiceOption } from '../base/base-service'
 
 const execAsync = promisify(exec)
 const writeFileAsync = promisify(writeFile)
 
-export interface DnsmasqService {
-	getUserGFWList(): string[]
-	addUserGFWDomain(domain: string)
-	removeUserGFWDomain(domain: string)
-	applyUserGFWList(): Promise<void>
-	updateStandardGFWList(): Promise<void>
-}
+export type DnsmasqService = DnsmasqMethods
 
 export default function createDnsmasqService(option: BaseServiceOption): DnsmasqService {
 	const c = option.config

@@ -2,6 +2,7 @@ import { copyFileSync, existsSync, readFileSync, writeFile } from 'fs'
 import { homedir } from 'os'
 import { join } from 'path'
 import * as YAML from 'yamljs'
+import { SSMode } from '../../types'
 
 export interface OptionalConfigProps {
 	excludeIPList?: string[]
@@ -23,8 +24,6 @@ export interface ConfigProps extends OptionalConfigProps {
 	encryptMethod: string
 }
 
-export type SSMode = 'auto' | 'global'
-
 export interface SettingProps {
 	ssEnable: boolean
 	ssMode: SSMode
@@ -41,8 +40,8 @@ export interface ConfigManager {
 	getSettingManager(): SettingManager
 }
 
-export default function createConfigManager(): ConfigManager {
-	const configHome = join(homedir(), '.ss-redir-service')
+export default function createConfigManager(configHome?: string): ConfigManager {
+	configHome = configHome || join(homedir(), '.ss-redir-service')
 	const configFile = join(configHome, 'config.yml')
 	const settingFile = join(configHome, 'setting.json')
 
