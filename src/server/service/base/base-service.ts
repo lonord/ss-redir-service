@@ -1,5 +1,9 @@
 import { ConfigProps, SettingManager } from '../../util/config'
 
+export interface ServiceContext {
+	isServiceRunning: boolean
+}
+
 export interface BaseService {
 	start(): Promise<void>
 	stop(): Promise<void>
@@ -9,6 +13,7 @@ export interface BaseService {
 export interface BaseServiceOption {
 	config: ConfigProps
 	settingManager: SettingManager
+	context: ServiceContext
 }
 
 export default function createBaseService(option: BaseServiceOption): BaseService {

@@ -81,7 +81,9 @@ function createSettingManager(settingFile: string): SettingManager {
 		ssEnable: true,
 		ssMode: 'auto',
 		userGFWList: [],
-		standardGFWList: []
+		standardGFWList: [
+			'google.com'
+		]
 	}
 
 	let setting: SettingProps = null

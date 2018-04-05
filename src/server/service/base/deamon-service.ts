@@ -1,7 +1,7 @@
 import { ChildProcess, spawn } from 'child_process'
 import { arch, platform } from 'os'
 import { join } from 'path'
-import { isArray, isFunction, isString } from 'util'
+import { isArray, isFunction, isNumber, isString } from 'util'
 import { binDir } from '../../../../universal/constant'
 import createBaseService, { BaseService, BaseServiceOption } from './base-service'
 
@@ -20,15 +20,28 @@ export default function createDeamonService(option: DeamonServiceOption): Deamon
 
 	function onProcessExit(code: number, signal: string) {
 		cp = null
-		console.log(`${option.command} exited with code ${code} and signal ${signal}, restart it`)
-		startProcess()
+		if (isNumber(code)) {
+			if (code > 0) {
+				console.log(`${option.command} exited with code ${code}, exit process`)
+				console.log(`args: '${getArgs(option.args).join(' ')}'`)
+				process.exit(code)
+			} else {
+				// 主进程退出引起的子进程退出时，code = 0，不需要重启子进程
+				return
+			}
+		}
+		if (option.context.isServiceRunning) {
+			console.log(`${option.command} exited with signal ${signal}, restart it`)
+			startProcess()
+		}
 	}
 
 	async function startProcess() {
 		await stopProcess()
 		cp = spawn(getCommand(option.command), getArgs(option.args), {
 			cwd: binDir,
-			env: process.env
+			env: process.env,
+			stdio: 'ignore'
 		})
 		cp.once('close', onProcessExit)
 	}
@@ -36,12 +49,17 @@ export default function createDeamonService(option: DeamonServiceOption): Deamon
 	async function stopProcess() {
 		await new Promise((resolve) => {
 			if (cp) {
+				if (!cp.pid) {
+					cp = null
+					resolve()
+					return
+				}
 				cp.removeAllListeners()
 				cp.once('close', () => {
 					cp = null
 					resolve()
 				})
-				cp.kill()
+				cp.kill('SIGTERM')
 			} else {
 				resolve()
 			}
@@ -69,10 +87,10 @@ export default function createDeamonService(option: DeamonServiceOption): Deamon
 
 function getCommand(command: string | (() => string)): string {
 	if (isString(command)) {
-		return command
+		return './' + command
 	}
 	if (isFunction(command)) {
-		return command()
+		return './' + command()
 	}
 }
 

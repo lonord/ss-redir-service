@@ -22,8 +22,8 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 		await unsetNatRules()
 		const bypassFile = await writeBypassListFile(c.excludeIPList)
 		const cmd = ssMode === 'auto'
-			? `ss-nat -s ${c.serverHost} -l ${c.localPort} -i ${bypassFile} -e match-set ${c.gfwIpsetName} dst -o`
-			: `ss-nat -s ${c.serverHost} -l ${c.localPort} -i ${bypassFile} -o`
+			? `./ss-nat -s ${c.serverHost} -l ${c.localPort} -i ${bypassFile} -e match-set ${c.gfwIpsetName} dst -o`
+			: `./ss-nat -s ${c.serverHost} -l ${c.localPort} -i ${bypassFile} -o`
 		await execAsync(cmd, {
 			cwd: binDir,
 			env: process.env
@@ -31,7 +31,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 	}
 
 	async function unsetNatRules() {
-		await execAsync('ss-nat -f', {
+		await execAsync('./ss-nat -f', {
 			cwd: binDir,
 			env: process.env
 		})
