@@ -4,11 +4,13 @@ const mkdirp = require('mkdirp')
 const { platform, tmpdir, arch } = require('os')
 const { join } = require('path')
 const rimraf = require('rimraf')
+const constant = require('../universal/constant')
 
 const tmp = join(tmpdir(), 'ss-redir-service-tmp')
 const osType = platform()
 const cpuArch = arch()
 
+prepareConfig()
 if (osType === 'linux') {
 	// TODO 检查重复编译
 	console.log('> Installing shadowsocks-libev')
@@ -65,5 +67,11 @@ function copySSBinary(exractDir) {
 function getBinaryDir() {
 	if (osType === 'linux') {
 		return join(__dirname, '../assets/bin', cpuArch)
+	}
+}
+
+function prepareConfig() {
+	if (!existsSync(constant.configFile)) {
+		copyFileSync(join(__dirname, '../../../../assets/config/default-config.yml'), constant.configFile)
 	}
 }

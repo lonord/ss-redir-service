@@ -7,19 +7,20 @@ export interface RunningStatus {
 
 export interface SSNatMethods {
 	getSSMode(): SSMode
-	setSSMode(mode: SSMode)
+	setSSMode(mode: SSMode): Promise<void>
 }
 
 export interface DnsmasqMethods {
 	getUserGFWList(): string[]
 	addUserGFWDomain(domain: string)
 	removeUserGFWDomain(domain: string)
-	applyUserGFWList(): Promise<void>
 	updateStandardGFWList(): Promise<void>
+	validateGFWList(): Promise<void>
+	invalidateGFWList(): Promise<void>
 }
 
 export interface RPCMethods extends SSNatMethods, DnsmasqMethods {
-	start()
-	stop()
+	start(): Promise<void>
+	stop(): Promise<void>
 	getStatus(): RunningStatus
 }

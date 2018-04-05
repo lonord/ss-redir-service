@@ -21,6 +21,9 @@ encryptMethod: 'chacha20'
 # ipset set name for auto redirect, default gfwlist
 # gfwIpsetName: 'gfwlist'
 
+# dnsmasq config file name for gfwlist, default gfwlist.conf
+# gfwlistFileName: 'gfwlist.conf'
+
 # port to forward dns, default 30053
 # dnsTunPort: 30053
 

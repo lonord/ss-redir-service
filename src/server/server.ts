@@ -1,8 +1,8 @@
 import * as ipc from 'json-ipc-lib'
+import { sockFile } from '../../universal/constant'
 import { RPCMethods, SSMode } from '../types'
 import createService from './service/service'
 import createConfigManager from './util/config'
-import { sockFile } from './util/util'
 
 const configMgr = createConfigManager()
 const settingMgr = configMgr.getSettingManager()
@@ -16,23 +16,24 @@ const {
 	setSSMode,
 	addUserGFWDomain,
 	removeUserGFWDomain,
-	applyUserGFWList,
+	validateGFWList,
+	invalidateGFWList,
 	getUserGFWList,
 	updateStandardGFWList
 } = service
 
 const handlers: RPCMethods = {
-	start: () => {
+	start: async () => {
 		if (service.isRunning()) {
 			return
 		}
-		service.start()
+		await service.start()
 		settingMgr.updateSetting({
 			ssEnable: true
 		})
 	},
-	stop: () => {
-		service.stop()
+	stop: async () => {
+		await service.stop()
 		settingMgr.updateSetting({
 			ssEnable: false
 		})
@@ -44,7 +45,8 @@ const handlers: RPCMethods = {
 	setSSMode,
 	addUserGFWDomain,
 	removeUserGFWDomain,
-	applyUserGFWList,
+	validateGFWList,
+	invalidateGFWList,
 	getUserGFWList,
 	updateStandardGFWList
 }

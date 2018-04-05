@@ -1,8 +1,8 @@
 import { ConfigProps, SettingManager } from '../../util/config'
 
 export interface BaseService {
-	start()
-	stop()
+	start(): Promise<void>
+	stop(): Promise<void>
 	isRunning(): boolean
 }
 
@@ -14,10 +14,10 @@ export interface BaseServiceOption {
 export default function createBaseService(option: BaseServiceOption): BaseService {
 	let running = false
 	return {
-		start: () => {
+		start: async () => {
 			running = true
 		},
-		stop: () => {
+		stop: async () => {
 			running = false
 		},
 		isRunning: () => {

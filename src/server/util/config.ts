@@ -2,11 +2,13 @@ import { copyFileSync, existsSync, readFileSync, writeFile } from 'fs'
 import { homedir } from 'os'
 import { join } from 'path'
 import * as YAML from 'yamljs'
+import { configFile, configHome } from '../../../universal/constant'
 import { SSMode } from '../../types'
 
 export interface OptionalConfigProps {
 	excludeIPList?: string[]
 	gfwIpsetName?: string
+	gfwlistFileName?: string
 	dnsTunPort?: number
 	dnsmasqConfigDir?: string
 	dnsmasqReloadCommand?: string
@@ -28,6 +30,7 @@ export interface SettingProps {
 	ssEnable: boolean
 	ssMode: SSMode
 	userGFWList: string[]
+	standardGFWList: string[]
 }
 
 export interface SettingManager {
@@ -40,12 +43,9 @@ export interface ConfigManager {
 	getSettingManager(): SettingManager
 }
 
-export default function createConfigManager(configHome?: string): ConfigManager {
-	configHome = configHome || join(homedir(), '.ss-redir-service')
-	const configFile = join(configHome, 'config.yml')
+export default function createConfigManager(): ConfigManager {
 	const settingFile = join(configHome, 'setting.json')
 
-	prepareConfig(configFile)
 	const config = readConfig(configFile)
 	const settingManager = createSettingManager(settingFile)
 
@@ -55,14 +55,8 @@ export default function createConfigManager(configHome?: string): ConfigManager 
 	}
 }
 
-function prepareConfig(configFile: string) {
-	if (!existsSync(configFile)) {
-		copyFileSync(join(__dirname, '../../../../assets/config/default-config.yml'), configFile)
-	}
-}
-
-function readConfig(configFile: string): ConfigProps {
-	const configObj = (YAML.parse(readFileSync(configFile, 'utf8')) || {}) as ConfigProps
+function readConfig(configFilePath: string): ConfigProps {
+	const configObj = (YAML.parse(readFileSync(configFilePath, 'utf8')) || {}) as ConfigProps
 	return {
 		...getDefaultConfig(),
 		...configObj
@@ -73,6 +67,7 @@ function getDefaultConfig(): OptionalConfigProps {
 	return {
 		excludeIPList: [],
 		gfwIpsetName: 'gfwlist',
+		gfwlistFileName: 'gfwlist.conf',
 		dnsTunPort: 30053,
 		dnsmasqConfigDir: '/etc/dnsmasq.d',
 		dnsmasqReloadCommand: 'service dnsmasq restart',
@@ -85,7 +80,8 @@ function createSettingManager(settingFile: string): SettingManager {
 	const defaultSetting: SettingProps = {
 		ssEnable: true,
 		ssMode: 'auto',
-		userGFWList: []
+		userGFWList: [],
+		standardGFWList: []
 	}
 
 	let setting: SettingProps = null

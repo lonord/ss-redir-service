@@ -18,19 +18,19 @@ export default function createSSService(option: BaseServiceOption): SSService {
 		...sup,
 		...nat,
 		isRunning: () => sup.isRunning(),
-		start: () => {
-			kcptun && kcptun.start()
-			redir.start()
-			tunnel.start()
-			nat.start()
-			sup.start()
+		start: async () => {
+			await sup.start()
+			kcptun && await kcptun.start()
+			await redir.start()
+			await tunnel.start()
+			await nat.start()
 		},
-		stop: () => {
-			sup.stop()
-			nat.stop()
-			tunnel.stop()
-			redir.stop()
-			kcptun && kcptun.stop()
+		stop: async () => {
+			await nat.stop()
+			await tunnel.stop()
+			await redir.stop()
+			kcptun && await kcptun.stop()
+			await sup.stop()
 		},
 		getStatus: () => {
 			//

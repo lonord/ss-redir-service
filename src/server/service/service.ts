@@ -9,6 +9,14 @@ export default function createService(option: BaseServiceOption): Service {
 	const dnsmasq = createDnsmasqService(option)
 	return {
 		...dnsmasq,
-		...ss
+		...ss,
+		start: async () => {
+			await ss.start()
+			await dnsmasq.validateGFWList()
+		},
+		stop: async () => {
+			await dnsmasq.invalidateGFWList()
+			await ss.stop()
+		}
 	}
 }

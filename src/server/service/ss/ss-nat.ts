@@ -3,8 +3,8 @@ import { writeFile } from 'fs'
 import { tmpdir } from 'os'
 import { join } from 'path'
 import { promisify } from 'util'
+import { binDir } from '../../../../universal/constant'
 import { SSMode, SSNatMethods } from '../../../types'
-import { binDir } from '../../util/util'
 import createBaseService, { BaseService, BaseServiceOption } from '../base/base-service'
 
 const execAsync = promisify(exec)
@@ -39,24 +39,36 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 
 	return {
 		...sup,
-		start: () => {
+		start: async () => {
 			if (sup.isRunning()) {
 				return
 			}
-			setNatRules().catch((err) => console.error('set nat rules error: ', err))
-			sup.start()
+			await sup.start()
+			try {
+				await setNatRules()
+			} catch (err) {
+				console.error('set nat rules error: ', err)
+			}
 		},
-		stop: () => {
-			sup.stop()
-			unsetNatRules().catch((err) => console.error('unset nat rules error: ', err))
+		stop: async () => {
+			try {
+				await unsetNatRules()
+			} catch (err) {
+				console.error('unset nat rules error: ', err)
+			}
+			await sup.stop()
 		},
 		getSSMode: () => {
 			return ssMode
 		},
-		setSSMode: (mode) => {
+		setSSMode: async (mode) => {
 			ssMode = mode
 			if (sup.isRunning()) {
-				setNatRules().catch((err) => console.error('update ss mode error: ', err))
+				try {
+					await setNatRules()
+				} catch (err) {
+					console.error('update ss mode error: ', err)
+				}
 			}
 			option.settingManager.updateSetting({
 				ssMode
