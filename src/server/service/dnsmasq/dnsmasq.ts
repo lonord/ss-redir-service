@@ -13,8 +13,8 @@ const rimrafAsync = promisify(rimraf)
 
 export interface DnsmasqService {
 	getUserGFWList(): string[]
-	addUserGFWDomain(domain: string)
-	removeUserGFWDomain(domain: string)
+	addUserGFWDomain(domain: string): Promise<void>
+	removeUserGFWDomain(domain: string): Promise<void>
 	updateStandardGFWList(): Promise<void>
 	validateGFWList(): Promise<void>
 	invalidateGFWList(): Promise<void>
@@ -61,11 +61,11 @@ export default function createDnsmasqService(option: BaseServiceOption): Dnsmasq
 		getUserGFWList: () => [
 			...userGFWList
 		],
-		addUserGFWDomain: (domain) => {
+		addUserGFWDomain: async (domain) => {
 			userGFWList = _.concat(userGFWList, domain)
 			saveUserGFWListSetting()
 		},
-		removeUserGFWDomain: (domain) => {
+		removeUserGFWDomain: async (domain) => {
 			userGFWList = [
 				...userGFWList
 			]

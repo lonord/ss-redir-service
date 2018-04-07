@@ -26,7 +26,7 @@ export default function createClient(): IPCMethods {
 				const fn = async (...g) => {
 					const argList = Array.prototype.slice.apply(g) as any[]
 					argList.unshift(`service.${name}`)
-					const result = await client.call(argList)
+					const result = await client.call.apply(client, argList)
 					return result
 				}
 				target[name] = fn

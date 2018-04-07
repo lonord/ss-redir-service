@@ -1,12 +1,13 @@
-import chalk from 'chalk'
+import chalk, { Chalk, ColorSupport } from 'chalk'
 import * as _ from 'lodash'
 import * as UI from 'readline-ui'
 import * as utils from 'readline-utils'
 
 const fnComplete = chalk.grey
 const fnCompleteArg = fnComplete.underline
-const errorMsg = chalk.redBright
-const infoMsg = chalk.greenBright
+
+export const errorMsg = chalk.redBright
+export const infoMsg = chalk.greenBright
 
 export interface PromptUIFunction {
 	name: string

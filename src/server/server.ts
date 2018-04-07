@@ -65,6 +65,7 @@ const handlers = {
 
 if (!isRoot()) {
 	console.log('> ss-redir-service require root permission')
+	process.exit(1)
 }
 
 depedenceChecker.check()
