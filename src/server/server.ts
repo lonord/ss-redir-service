@@ -1,7 +1,9 @@
+#!/usr/bin/env node
+
 import * as isRoot from 'is-root'
 import * as ipc from 'json-ipc-lib'
 import { sockFile } from '../../universal/constant'
-import { RPCMethods, SSMode } from '../types'
+import { RunningStatus } from '../types'
 import { ServiceContext } from './service/base/base-service'
 import createService from './service/service'
 import createDependenceChecker from './util/check'
@@ -30,7 +32,7 @@ const {
 	updateStandardGFWList
 } = service
 
-const handlers: RPCMethods = {
+const handlers = {
 	start: async () => {
 		if (service.isRunning()) {
 			return
@@ -49,7 +51,7 @@ const handlers: RPCMethods = {
 		})
 	},
 	getStatus: () => {
-		return {} as any
+		return {} as any as RunningStatus
 	},
 	getSSMode,
 	setSSMode,
@@ -74,7 +76,8 @@ if (settingMgr.getSetting().ssEnable) {
 
 const server = new ipc.Server(
 	sockFile,
-	{ handlers })
+	{ service: handlers }
+)
 server.listen()
 console.log(`> ss-redir-service started, listening on sock file: ${sockFile}`)
 

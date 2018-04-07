@@ -4,7 +4,6 @@ import * as _ from 'lodash'
 import { join } from 'path'
 import * as rimraf from 'rimraf'
 import { promisify } from 'util'
-import { DnsmasqMethods } from '../../../types'
 import fetchGfwlist from '../../util/gfwlist-fetcher'
 import { BaseServiceOption } from '../base/base-service'
 
@@ -12,7 +11,14 @@ const execAsync = promisify(exec)
 const writeFileAsync = promisify(writeFile)
 const rimrafAsync = promisify(rimraf)
 
-export type DnsmasqService = DnsmasqMethods
+export interface DnsmasqService {
+	getUserGFWList(): string[]
+	addUserGFWDomain(domain: string)
+	removeUserGFWDomain(domain: string)
+	updateStandardGFWList(): Promise<void>
+	validateGFWList(): Promise<void>
+	invalidateGFWList(): Promise<void>
+}
 
 export default function createDnsmasqService(option: BaseServiceOption): DnsmasqService {
 	const c = option.config

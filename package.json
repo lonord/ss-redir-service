@@ -4,6 +4,10 @@
   "description": "Shadowsocks transparent proxy service",
   "main": "lib/",
   "types": "lib/",
+  "bin": {
+    "ss-redir-service": "lib/server/server.js",
+    "ss-cli": "lib/client/cli.js"
+  },
   "scripts": {
     "build": "rimraf lib && tsc -d",
     "build4debug": "rimraf lib && tsc --inlineSourceMap",
@@ -36,6 +40,7 @@
     "typescript": "^2.8.1"
   },
   "dependencies": {
+    "chalk": "^2.3.2",
     "commander": "^2.15.1",
     "hash-files": "^1.1.1",
     "is-root": "^2.0.0",
@@ -44,6 +49,8 @@
     "mkdirp": "^0.5.1",
     "node-fetch": "^2.1.2",
     "pidusage": "^2.0.6",
+    "readline-ui": "^2.2.3",
+    "readline-utils": "^2.2.3",
     "rimraf": "^2.6.2",
     "yamljs": "^0.3.0"
   }

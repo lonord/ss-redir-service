@@ -4,13 +4,16 @@ import { tmpdir } from 'os'
 import { join } from 'path'
 import { promisify } from 'util'
 import { binDir } from '../../../../universal/constant'
-import { SSMode, SSNatMethods } from '../../../types'
+import { SSMode } from '../../../types'
 import createBaseService, { BaseService, BaseServiceOption } from '../base/base-service'
 
 const execAsync = promisify(exec)
 const writeFileAsync = promisify(writeFile)
 
-export type SSNatService = BaseService & SSNatMethods
+export interface SSNatService extends BaseService {
+	getSSMode(): SSMode
+	setSSMode(mode: SSMode): Promise<void>
+}
 
 export default function createSSNatService(option: BaseServiceOption): SSNatService {
 	const c = option.config
