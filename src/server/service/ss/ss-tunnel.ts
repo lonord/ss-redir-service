@@ -5,10 +5,14 @@ import createDeamonService from '../base/deamon-service'
 export type SSTunnelService = BaseService
 
 export default function createSSTunnelService(option: BaseServiceOption): SSTunnelService {
+	const args = getArgs(option.config)
+	if (option.verbose === true) {
+		args.push('-v')
+	}
 	const sup = createDeamonService({
 		...option,
 		command: 'ss-tunnel',
-		args: getArgs(option.config)
+		args
 	})
 	return {
 		...sup

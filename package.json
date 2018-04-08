@@ -1,6 +1,6 @@
 {
   "name": "@lonord/ss-redir-service",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Shadowsocks transparent proxy service",
   "main": "lib/client",
   "bin": {
@@ -41,6 +41,7 @@
   "dependencies": {
     "@lonord/ss-redir-service-bin": "^1.0.1",
     "chalk": "^2.3.2",
+    "commander": "^2.15.1",
     "is-root": "^2.0.0",
     "json-ipc-lib": "^1.0.3",
     "lodash": "^4.17.5",

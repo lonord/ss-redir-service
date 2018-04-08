@@ -41,7 +41,7 @@ export default function createDeamonService(option: DeamonServiceOption): Deamon
 		cp = spawn(getCommand(option.command), getArgs(option.args), {
 			cwd: binDir,
 			env: process.env,
-			stdio: 'ignore'
+			stdio: option.verbose === true ? ['ignore', process.stdout, process.stderr] : 'ignore'
 		})
 		cp.once('close', onProcessExit)
 	}

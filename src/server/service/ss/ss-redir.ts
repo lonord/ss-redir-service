@@ -5,10 +5,14 @@ import createDeamonService from '../base/deamon-service'
 export type SSRedirService = BaseService
 
 export default function createSSRedirService(option: BaseServiceOption): SSRedirService {
+	const args = getArgs(option.config)
+	if (option.verbose === true) {
+		args.push('-v')
+	}
 	const sup = createDeamonService({
 		...option,
 		command: 'ss-redir',
-		args: getArgs(option.config)
+		args
 	})
 	return {
 		...sup

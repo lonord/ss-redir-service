@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import * as program from 'commander'
 import * as isRoot from 'is-root'
 import * as ipc from 'json-ipc-lib'
 import { sockFile } from '../../universal/constant'
@@ -10,6 +11,15 @@ import createService from './service/service'
 import createDependenceChecker from './util/check'
 import createConfigManager from './util/config'
 
+// tslint:disable-next-line:no-var-requires
+const pkg = require('../../package.json')
+
+program
+	.version(pkg.version)
+	.description(pkg.description)
+	.option('-v, --verbose')
+	.parse(process.argv)
+
 const serviceContext: ServiceContext = {
 	isServiceRunning: false
 }
@@ -18,7 +28,8 @@ const settingMgr = configMgr.getSettingManager()
 const service = withServiceUptime(createService({
 	config: configMgr.getConfig(),
 	settingManager: settingMgr,
-	context: serviceContext
+	context: serviceContext,
+	verbose: !!program.verbose
 }))
 const depedenceChecker = createDependenceChecker()
 

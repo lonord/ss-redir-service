@@ -14,6 +14,7 @@ export interface BaseServiceOption {
 	config: ConfigProps
 	settingManager: SettingManager
 	context: ServiceContext
+	verbose?: boolean
 }
 
 export default function createBaseService(option: BaseServiceOption): BaseService {
