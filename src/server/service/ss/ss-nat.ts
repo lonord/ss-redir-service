@@ -1,9 +1,9 @@
+import * as binDir from '@lonord/ss-redir-service-bin'
 import { exec, execSync } from 'child_process'
 import { writeFile } from 'fs'
 import { tmpdir } from 'os'
 import { join } from 'path'
 import { promisify } from 'util'
-import { binDir } from '../../../../universal/constant'
 import { SSMode } from '../../../types'
 import createBaseService, { BaseService, BaseServiceOption } from '../base/base-service'
 

@@ -1,8 +1,8 @@
+import * as binDir from '@lonord/ss-redir-service-bin'
 import { ChildProcess, spawn } from 'child_process'
 import { arch, platform } from 'os'
 import { join } from 'path'
 import { isArray, isFunction, isNumber, isString } from 'util'
-import { binDir } from '../../../../universal/constant'
 import createBaseService, { BaseService, BaseServiceOption } from './base-service'
 
 export interface DeamonService extends BaseService {
