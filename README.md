@@ -20,3 +20,9 @@ And some other packages will be used when running:
 - iptables
 - ipset
 - dnsmasq
+
+## Install
+
+```bash
+npm i -g @lonord/ss-redir-service --unsafe-perm=true --allow-root
+```

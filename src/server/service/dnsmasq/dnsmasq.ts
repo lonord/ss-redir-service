@@ -62,10 +62,16 @@ export default function createDnsmasqService(option: BaseServiceOption): Dnsmasq
 			...userGFWList
 		],
 		addUserGFWDomain: async (domain) => {
+			if (userGFWList.indexOf(domain)) {
+				_.pull(userGFWList, domain)
+			}
 			userGFWList = _.concat(userGFWList, domain)
 			saveUserGFWListSetting()
 		},
 		removeUserGFWDomain: async (domain) => {
+			if (!userGFWList.indexOf(domain)) {
+				return
+			}
 			userGFWList = [
 				...userGFWList
 			]

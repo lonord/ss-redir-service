@@ -1,15 +1,14 @@
 {
   "name": "@lonord/ss-redir-service",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "Shadowsocks transparent proxy service",
-  "main": "lib/",
-  "types": "lib/",
+  "main": "lib/client",
   "bin": {
     "ss-redir-service": "lib/server/server.js",
     "ss-cli": "lib/client/cli.js"
   },
   "scripts": {
-    "build": "rimraf lib && tsc -d",
+    "build": "rimraf lib && tsc",
     "build4debug": "rimraf lib && tsc --inlineSourceMap",
     "prepublishOnly": "npm run build",
     "postinstall": "node scripts/postinstall.js"
@@ -47,6 +46,7 @@
     "json-ipc-lib": "^1.0.3",
     "lodash": "^4.17.5",
     "mkdirp": "^0.5.1",
+    "ms": "^2.1.1",
     "node-fetch": "^2.1.2",
     "pidusage": "^2.0.6",
     "readline-ui": "^2.2.3",

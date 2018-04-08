@@ -4,6 +4,7 @@ import * as isRoot from 'is-root'
 import * as ipc from 'json-ipc-lib'
 import { sockFile } from '../../universal/constant'
 import { RunningStatus } from '../types'
+import withServiceUptime from './decorator/service-uptime'
 import { ServiceContext } from './service/base/base-service'
 import createService from './service/service'
 import createDependenceChecker from './util/check'
@@ -14,11 +15,11 @@ const serviceContext: ServiceContext = {
 }
 const configMgr = createConfigManager()
 const settingMgr = configMgr.getSettingManager()
-const service = createService({
+const service = withServiceUptime(createService({
 	config: configMgr.getConfig(),
 	settingManager: settingMgr,
 	context: serviceContext
-})
+}))
 const depedenceChecker = createDependenceChecker()
 
 const {
@@ -51,7 +52,11 @@ const handlers = {
 		})
 	},
 	getStatus: () => {
-		return {} as any as RunningStatus
+		const s: RunningStatus = {
+			running: service.isRunning(),
+			uptime: service.getUptime()
+		}
+		return s
 	},
 	getSSMode,
 	setSSMode,

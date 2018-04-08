@@ -1,9 +1,20 @@
 #!/usr/bin/env node
 
+import * as isRoot from 'is-root'
+import * as ms from 'ms'
 import * as UI from 'readline-ui'
 import createClient from './index'
-import createPromptUI, { infoMsg } from './prompt'
+import createPromptUI, { errorMsg, infoMsg } from './prompt'
 
+// tslint:disable-next-line:no-var-requires
+const pkg = require('../../package.json')
+
+if (!isRoot()) {
+	console.log('> ss-cli require root permission')
+	process.exit(1)
+}
+
+console.log(`ss-redir-service v${pkg.version}`)
 const client = createClient()
 const p = createPromptUI({
 	functions: [
@@ -28,7 +39,10 @@ const p = createPromptUI({
 			args: [],
 			handle: async () => {
 				const status = await client.getStatus()
-				console.log('OK [TODO status show]')
+				console.log(`* ss service is ${status.running ? infoMsg('running') : errorMsg('not running')}`)
+				if (status.running) {
+					console.log(`* ss running up to ${infoMsg(ms(status.uptime))}`)
+				}
 			}
 		},
 		{
@@ -64,6 +78,7 @@ const p = createPromptUI({
 			args: [ 'domain' ],
 			handle: async (domain) => {
 				await client.addUserGFWDomain(domain)
+				await client.validateGFWList()
 				console.log('OK')
 			}
 		},
@@ -72,6 +87,7 @@ const p = createPromptUI({
 			args: [ 'domain' ],
 			handle: async (domain) => {
 				await client.removeUserGFWDomain(domain)
+				await client.validateGFWList()
 				console.log('OK')
 			}
 		},
@@ -80,6 +96,7 @@ const p = createPromptUI({
 			args: [],
 			handle: async () => {
 				await client.updateStandardGFWList()
+				await client.validateGFWList()
 				console.log('OK')
 			}
 		},

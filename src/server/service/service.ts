@@ -14,14 +14,14 @@ export default function createService(option: BaseServiceOption): Service {
 		...ipset,
 		...ss,
 		start: async () => {
-			await ss.start()
 			await ipset.start()
+			await ss.start()
 			await dnsmasq.validateGFWList()
 		},
 		stop: async () => {
 			await dnsmasq.invalidateGFWList()
-			await ipset.stop()
 			await ss.stop()
+			await ipset.stop()
 		}
 	}
 }
