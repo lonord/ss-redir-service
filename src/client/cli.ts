@@ -23,7 +23,7 @@ const p = createPromptUI({
 			args: [],
 			handle: async () => {
 				await client.start()
-				console.log('OK')
+				printResult('OK')
 			}
 		},
 		{
@@ -31,7 +31,7 @@ const p = createPromptUI({
 			args: [],
 			handle: async () => {
 				await client.stop()
-				console.log('OK')
+				printResult('OK')
 			}
 		},
 		{
@@ -39,9 +39,10 @@ const p = createPromptUI({
 			args: [],
 			handle: async () => {
 				const status = await client.getStatus()
-				console.log(`* ss service is ${status.running ? infoMsg('running') : errorMsg('not running')}`)
+				printResult(`ss service is ${status.running ? infoMsg('running') : errorMsg('not running')}`)
 				if (status.running) {
-					console.log(`* ss running up to ${infoMsg(ms(status.uptime))}`)
+					printResult(`ss running up to ${infoMsg(ms(status.uptime))}`)
+					printResult(`ss mode is ${infoMsg(status.ssMode)}`)
 				}
 			}
 		},
@@ -50,7 +51,7 @@ const p = createPromptUI({
 			args: [],
 			handle: async () => {
 				const mode = await client.getSSMode()
-				console.log(`ss mode is ${infoMsg(mode)}`)
+				printResult(`ss mode is ${infoMsg(mode)}`)
 			}
 		},
 		{
@@ -59,7 +60,7 @@ const p = createPromptUI({
 			handle: async (mode) => {
 				if (mode === 'auto' || mode === 'global') {
 					await client.setSSMode(mode)
-					console.log('OK')
+					printResult('OK')
 				} else {
 					throw new Error('ss mode should be `auto` or `global`')
 				}
@@ -70,7 +71,7 @@ const p = createPromptUI({
 			args: [],
 			handle: async () => {
 				const gfwlist = await client.getUserGFWList()
-				gfwlist.forEach((t) => console.log(t))
+				gfwlist.forEach((t) => printResult(t))
 			}
 		},
 		{
@@ -79,7 +80,7 @@ const p = createPromptUI({
 			handle: async (domain) => {
 				await client.addUserGFWDomain(domain)
 				await client.validateGFWList()
-				console.log('OK')
+				printResult('OK')
 			}
 		},
 		{
@@ -88,7 +89,7 @@ const p = createPromptUI({
 			handle: async (domain) => {
 				await client.removeUserGFWDomain(domain)
 				await client.validateGFWList()
-				console.log('OK')
+				printResult('OK')
 			}
 		},
 		{
@@ -97,7 +98,7 @@ const p = createPromptUI({
 			handle: async () => {
 				await client.updateStandardGFWList()
 				await client.validateGFWList()
-				console.log('OK')
+				printResult('OK')
 			}
 		},
 		{
@@ -105,7 +106,7 @@ const p = createPromptUI({
 			args: [],
 			handle: async () => {
 				await client.validateGFWList()
-				console.log('OK')
+				printResult('OK')
 			}
 		},
 		{
@@ -113,8 +114,12 @@ const p = createPromptUI({
 			args: [],
 			handle: async () => {
 				await client.invalidateGFWList()
-				console.log('OK')
+				printResult('OK')
 			}
 		}
 	]
 })
+
+function printResult(str: string) {
+	console.log('* ' + str)
+}

@@ -65,7 +65,8 @@ const handlers = {
 	getStatus: () => {
 		const s: RunningStatus = {
 			running: service.isRunning(),
-			uptime: service.getUptime()
+			uptime: service.getUptime(),
+			ssMode: service.getSSMode()
 		}
 		return s
 	},
