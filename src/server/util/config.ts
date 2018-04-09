@@ -24,6 +24,7 @@ export interface ConfigProps extends OptionalConfigProps {
 	localPort: number
 	secret: string
 	encryptMethod: string
+	lanInterface: string
 }
 
 export interface SettingProps {

@@ -14,6 +14,9 @@ secret: 'yoursecret'
 # ss encrypt medhod
 encryptMethod: 'chacha20'
 
+# lan interface to nat
+lanInterface: 'eth0'
+
 # addrs no redirect
 # excludeIPList:
 #   - '123.456.789.111'
