@@ -3,6 +3,7 @@
 import * as program from 'commander'
 import * as isRoot from 'is-root'
 import * as ipc from 'json-ipc-lib'
+import { platform } from 'os'
 import { sockFile } from '../../universal/constant'
 import { RunningStatus } from '../types'
 import withServiceUptime from './decorator/service-uptime'
@@ -13,6 +14,11 @@ import createConfigManager from './util/config'
 
 // tslint:disable-next-line:no-var-requires
 const pkg = require('../../package.json')
+
+if (platform() !== 'linux') {
+	console.log('ss-redir-service only support linux platform')
+	process.exit(0)
+}
 
 program
 	.version(pkg.version)
@@ -62,11 +68,12 @@ const handlers = {
 			ssEnable: false
 		})
 	},
-	getStatus: () => {
+	getStatus: async () => {
 		const s: RunningStatus = {
 			running: service.isRunning(),
 			uptime: service.getUptime(),
-			ssMode: service.getSSMode()
+			ssMode: service.getSSMode(),
+			processStatus: await service.getStatus()
 		}
 		return s
 	},

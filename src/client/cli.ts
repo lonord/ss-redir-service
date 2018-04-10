@@ -2,6 +2,7 @@
 
 import * as isRoot from 'is-root'
 import * as ms from 'ms'
+import * as prettyBytes from 'pretty-bytes'
 import * as UI from 'readline-ui'
 import createClient from './index'
 import createPromptUI, { errorMsg, infoMsg } from './prompt'
@@ -43,6 +44,14 @@ const p = createPromptUI({
 				if (status.running) {
 					printResult(`ss running up to ${infoMsg(ms(status.uptime))}`)
 					printResult(`ss mode is ${infoMsg(status.ssMode)}`)
+					for (const pName in status.processStatus) {
+						if (pName in status.processStatus) {
+							const stat = status.processStatus[pName]
+							if (stat.pid > 0) {
+								printResult(`[${pName}] pid: ${stat.pid}, cpu: ${stat.cpu}%, mem: ${prettyBytes(stat.mem)}`)
+							}
+						}
+					}
 				}
 			}
 		},

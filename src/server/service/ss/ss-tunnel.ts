@@ -1,8 +1,8 @@
 import { ConfigProps } from '../../util/config'
-import { BaseService, BaseServiceOption } from '../base/base-service'
-import createDeamonService from '../base/deamon-service'
+import { BaseServiceOption } from '../base/base-service'
+import createDeamonService, { DeamonService } from '../base/deamon-service'
 
-export type SSTunnelService = BaseService
+export type SSTunnelService = DeamonService
 
 export default function createSSTunnelService(option: BaseServiceOption): SSTunnelService {
 	const args = getArgs(option.config)
@@ -20,13 +20,19 @@ export default function createSSTunnelService(option: BaseServiceOption): SSTunn
 }
 
 function getArgs(config: ConfigProps): string[] {
+	const serverAddr = config.enableKcpTun
+		? '127.0.0.1'
+		: config.serverHost
+	const serverPort = config.enableKcpTun
+		? config.kcpTunLocalPort + ''
+		: config.serverPort + ''
 	return [
 		'-s',
-		config.serverHost + '',
+		serverAddr,
 		'-p',
-		config.serverPort + '',
+		serverPort,
 		'-l',
-		config.dnsTunPort + '',
+		(config.dnsTunPort - 1) + '',
 		'-k',
 		config.secret,
 		'-m',
@@ -36,7 +42,6 @@ function getArgs(config: ConfigProps): string[] {
 		'-b',
 		'0.0.0.0',
 		'-L',
-		'8.8.8.8:53',
-		'-u'
+		'8.8.8.8:53'
 	]
 }

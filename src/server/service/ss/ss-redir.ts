@@ -1,8 +1,8 @@
 import { ConfigProps } from '../../util/config'
-import { BaseService, BaseServiceOption } from '../base/base-service'
-import createDeamonService from '../base/deamon-service'
+import { BaseServiceOption } from '../base/base-service'
+import createDeamonService, { DeamonService } from '../base/deamon-service'
 
-export type SSRedirService = BaseService
+export type SSRedirService = DeamonService
 
 export default function createSSRedirService(option: BaseServiceOption): SSRedirService {
 	const args = getArgs(option.config)

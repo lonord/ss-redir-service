@@ -1,9 +1,9 @@
 import * as _ from 'lodash'
 import { ConfigProps } from '../../util/config'
-import { BaseService, BaseServiceOption } from '../base/base-service'
-import createDeamonService from '../base/deamon-service'
+import { BaseServiceOption } from '../base/base-service'
+import createDeamonService, { DeamonService } from '../base/deamon-service'
 
-export type KcpTunService = BaseService
+export type KcpTunService = DeamonService
 
 export default function createKcpTunService(option: BaseServiceOption): KcpTunService {
 	const sup = createDeamonService({
