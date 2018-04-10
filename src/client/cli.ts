@@ -51,7 +51,7 @@ const p = createPromptUI({
 								printResult(
 									`[${pName}] ` +
 									`pid: ${infoMsg(stat.pid + '')}, ` +
-									`cpu: ${infoMsg(stat.cpu + '')}%, ` +
+									`cpu: ${infoMsg(stat.cpu + '%')}, ` +
 									`mem: ${infoMsg(prettyBytes(stat.mem))}`
 								)
 							}
