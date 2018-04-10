@@ -48,7 +48,12 @@ const p = createPromptUI({
 						if (pName in status.processStatus) {
 							const stat = status.processStatus[pName]
 							if (stat.pid > 0) {
-								printResult(`[${pName}] pid: ${stat.pid}, cpu: ${stat.cpu}%, mem: ${prettyBytes(stat.mem)}`)
+								printResult(
+									`[${pName}] ` +
+									`pid: ${infoMsg(stat.pid + '')}, ` +
+									`cpu: ${infoMsg(stat.cpu + '')}%, ` +
+									`mem: ${infoMsg(prettyBytes(stat.mem))}`
+								)
 							}
 						}
 					}

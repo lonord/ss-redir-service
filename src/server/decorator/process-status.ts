@@ -1,4 +1,5 @@
 import * as pidusage from 'pidusage'
+import { isNumber } from 'util'
 import { ProcessStat } from '../../types'
 import { DeamonService } from '../service/base/deamon-service'
 
@@ -7,11 +8,11 @@ export interface ProcessStatusProps {
 }
 
 export default function withProcessStatus<T extends DeamonService>(service: T): T & ProcessStatusProps {
-	const child = service.getChildProcess()
 	return {
 		...(service as any),
 		getProcessStatus: async () => {
-			if (!child.connected || child.killed) {
+			const child = service.getChildProcess()
+			if (!isNumber(child.pid)) {
 				return {
 					pid: -1,
 					cpu: -1,
