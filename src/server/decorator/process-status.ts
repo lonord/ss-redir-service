@@ -12,7 +12,7 @@ export default function withProcessStatus<T extends DeamonService>(service: T): 
 		...(service as any),
 		getProcessStatus: async () => {
 			const child = service.getChildProcess()
-			if (!isNumber(child.pid)) {
+			if (!child || !isNumber(child.pid)) {
 				return {
 					pid: -1,
 					cpu: -1,

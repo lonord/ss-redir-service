@@ -121,7 +121,7 @@ process.on('SIGINT', exit)
 process.on('SIGTERM', exit)
 process.on('uncaughtException', (err) => {
 	service.stop().catch(() => {
-		console.log('aaa')
+		// ignore
 	}).then(() => {
 		console.error(err)
 		process.exit(1)
