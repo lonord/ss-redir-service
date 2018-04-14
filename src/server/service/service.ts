@@ -13,6 +13,16 @@ export default function createService(option: BaseServiceOption): Service {
 		...dnsmasq,
 		...ipset,
 		...ss,
+		validateGFWList: async () => {
+			if (ss.isRunning()) {
+				await dnsmasq.validateGFWList()
+			}
+		},
+		invalidateGFWList: async () => {
+			if (!ss.isRunning()) {
+				await dnsmasq.invalidateGFWList()
+			}
+		},
 		start: async () => {
 			await ipset.start()
 			await ss.start()
