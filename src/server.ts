@@ -85,7 +85,8 @@ const controller: ServiceController = {
 	validateGFWList,
 	invalidateGFWList,
 	getUserGFWList: async () => getUserGFWList(),
-	updateStandardGFWList
+	updateStandardGFWList,
+	getVersion: async () => pkg.version
 }
 
 if (!isRoot()) {
@@ -101,7 +102,7 @@ if (settingMgr.getSetting().ssEnable) {
 }
 
 const server = createWebService(controller)
-const httpPort = program.port || 11080
+const httpPort = isNaN(parseInt(program.port)) ? 11080 : parseInt(program.port)
 const httpHost = program.host || '0.0.0.0'
 server.start(httpPort, httpHost).then(() => {
 	console.log(`> ss-redir-service started, listening on: http://${httpHost}:${httpPort}`)

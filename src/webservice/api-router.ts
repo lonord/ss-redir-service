@@ -71,6 +71,9 @@ export default function createAPIRouter(controller: ServiceController): Router {
 			await controller.updateStandardGFWList()
 			ctx.body = 'OK'
 		})
+		.get('/version', async (ctx) => {
+			ctx.body = await controller.getVersion()
+		})
 		.all('/*', async (ctx) => {
 			ctx.throw(404, 'API Not Found')
 		})
