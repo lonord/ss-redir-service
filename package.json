@@ -1,6 +1,6 @@
 {
   "name": "@lonord/ss-redir-service",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Shadowsocks transparent proxy service",
   "bin": {
     "ss-redir-service": "lib/server.js"
