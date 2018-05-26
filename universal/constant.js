@@ -5,4 +5,3 @@ const configHome = path.join(os.homedir(), '.ss-redir-service')
 
 exports.configHome = configHome
 exports.configFile = path.join(configHome, 'config.yml')
-exports.sockFile = '/var/run/ss-redir-service.sock'

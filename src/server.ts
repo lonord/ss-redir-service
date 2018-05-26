@@ -2,18 +2,17 @@
 
 import * as program from 'commander'
 import * as isRoot from 'is-root'
-import * as ipc from 'json-ipc-lib'
 import { platform } from 'os'
-import { sockFile } from '../../universal/constant'
-import { RunningStatus } from '../types'
 import withServiceUptime from './decorator/service-uptime'
 import { ServiceContext } from './service/base/base-service'
 import createService from './service/service'
+import { RunningStatus, ServiceController } from './types'
 import createDependenceChecker from './util/check'
 import createConfigManager from './util/config'
+import createWebService from './webservice/webservice'
 
 // tslint:disable-next-line:no-var-requires
-const pkg = require('../../package.json')
+const pkg = require('../package.json')
 
 if (platform() !== 'linux') {
 	console.log('ss-redir-service only support linux platform')
@@ -24,6 +23,8 @@ program
 	.version(pkg.version)
 	.description(pkg.description)
 	.option('-v, --verbose')
+	.option('-p, --port <n>')
+	.option('-h, --host <n>')
 	.parse(process.argv)
 
 const serviceContext: ServiceContext = {
@@ -50,7 +51,7 @@ const {
 	updateStandardGFWList
 } = service
 
-const handlers = {
+const controller: ServiceController = {
 	start: async () => {
 		if (service.isRunning()) {
 			return
@@ -77,13 +78,13 @@ const handlers = {
 		}
 		return s
 	},
-	getSSMode,
+	getSSMode: async () => getSSMode(),
 	setSSMode,
 	addUserGFWDomain,
 	removeUserGFWDomain,
 	validateGFWList,
 	invalidateGFWList,
-	getUserGFWList,
+	getUserGFWList: async () => getUserGFWList(),
 	updateStandardGFWList
 }
 
@@ -99,24 +100,21 @@ if (settingMgr.getSetting().ssEnable) {
 	service.start()
 }
 
-const server = new ipc.Server(
-	sockFile,
-	{ service: handlers }
-)
-server.listen()
-console.log(`> ss-redir-service started, listening on sock file: ${sockFile}`)
+const server = createWebService(controller)
+const httpPort = program.port || 11080
+const httpHost = program.host || '0.0.0.0'
+server.start(httpPort, httpHost).then(() => {
+	console.log(`> ss-redir-service started, listening on: http://${httpHost}:${httpPort}`)
+})
 
 const exit = async () => {
 	console.log(`> ss-redir-service is going to exit ...`)
 	serviceContext.isServiceRunning = false
-	await closeIPCServer()
+	await server.stop()
 	await service.stop()
 	process.exit(0)
 }
 
-const closeIPCServer = () => new Promise((resolve) => {
-	server.close(() => resolve())
-})
 process.on('SIGINT', exit)
 process.on('SIGTERM', exit)
 process.on('uncaughtException', (err) => {

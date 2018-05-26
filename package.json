@@ -1,11 +1,9 @@
 {
   "name": "@lonord/ss-redir-service",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "Shadowsocks transparent proxy service",
-  "main": "lib/client",
   "bin": {
-    "ss-redir-service": "lib/server/server.js",
-    "ss-cli": "lib/client/cli.js"
+    "ss-redir-service": "lib/server.js"
   },
   "scripts": {
     "build": "rimraf lib && tsc",
@@ -28,6 +26,11 @@
   },
   "homepage": "https://github.com/lonord/ss-redir-service#readme",
   "devDependencies": {
+    "@types/kcors": "^2.2.3",
+    "@types/koa": "^2.0.45",
+    "@types/koa-bodyparser": "^4.2.0",
+    "@types/koa-json": "^2.0.18",
+    "@types/koa-router": "^7.0.28",
     "@types/lodash": "^4.14.106",
     "@types/mkdirp": "^0.5.2",
     "@types/node": "^9.4.6",
@@ -43,6 +46,11 @@
     "commander": "^2.15.1",
     "is-root": "^2.0.0",
     "json-ipc-lib": "^1.0.3",
+    "kcors": "^2.2.1",
+    "koa": "^2.5.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-json": "^2.0.2",
+    "koa-router": "^7.4.0",
     "lodash": "^4.17.5",
     "mkdirp": "^0.5.1",
     "ms": "^2.1.1",

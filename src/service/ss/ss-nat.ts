@@ -4,7 +4,7 @@ import { writeFile } from 'fs'
 import { tmpdir } from 'os'
 import { join } from 'path'
 import { promisify } from 'util'
-import { SSMode } from '../../../types'
+import { SSMode } from '../../types'
 import createBaseService, { BaseService, BaseServiceOption } from '../base/base-service'
 
 const execAsync = promisify(exec)

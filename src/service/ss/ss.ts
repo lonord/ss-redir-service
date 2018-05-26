@@ -1,5 +1,5 @@
-import { ProcessStat } from '../../../types'
 import withProcessStatus from '../../decorator/process-status'
+import { ProcessStat } from '../../types'
 import createBaseService, { BaseService, BaseServiceOption } from '../base/base-service'
 import createDNSForwarderService from './dns-forwarder'
 import createKcpTunService from './kcptun'

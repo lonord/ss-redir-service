@@ -1,7 +1,7 @@
 import * as pidusage from 'pidusage'
 import { isNumber } from 'util'
-import { ProcessStat } from '../../types'
 import { DeamonService } from '../service/base/deamon-service'
+import { ProcessStat } from '../types'
 
 export interface ProcessStatusProps {
 	getProcessStatus(): Promise<ProcessStat>

@@ -2,8 +2,8 @@ import { copyFileSync, existsSync, readFileSync, writeFile } from 'fs'
 import { homedir } from 'os'
 import { join } from 'path'
 import * as YAML from 'yamljs'
-import { configFile, configHome } from '../../../universal/constant'
-import { SSMode } from '../../types'
+import { configFile, configHome } from '../../universal/constant'
+import { SSMode } from '../types'
 
 export interface OptionalConfigProps {
 	excludeIPList?: string[]
