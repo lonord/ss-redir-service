@@ -1,9 +1,11 @@
 import { exec } from 'child_process'
 import { writeFile } from 'fs'
 import * as _ from 'lodash'
+import fetch from 'node-fetch'
 import { join } from 'path'
 import * as rimraf from 'rimraf'
 import { promisify } from 'util'
+import { isCmdDnsmasqReloaderConfig, isHttpDnsmasqReloaderConfig } from '../../util/config'
 import fetchGfwlist from '../../util/gfwlist-fetcher'
 import { BaseServiceOption } from '../base/base-service'
 
@@ -27,7 +29,15 @@ export default function createDnsmasqService(option: BaseServiceOption): Dnsmasq
 	let standardGFWList = option.settingManager.getSetting().standardGFWList
 
 	async function reloadDnsmasq() {
-		await execAsync(c.dnsmasqReloadCommand)
+		if (isCmdDnsmasqReloaderConfig(c.dnsmasqReloaderConfig)) {
+			await execAsync(c.dnsmasqReloaderConfig.command)
+		} else if (isHttpDnsmasqReloaderConfig(c.dnsmasqReloaderConfig)) {
+			await fetch(c.dnsmasqReloaderConfig.url, {
+				method: c.dnsmasqReloaderConfig.method,
+				headers: c.dnsmasqReloaderConfig.header,
+				body: c.dnsmasqReloaderConfig.body
+			})
+		}
 	}
 
 	async function writeGFWListFile() {

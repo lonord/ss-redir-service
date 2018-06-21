@@ -33,8 +33,19 @@ lanInterface: 'eth0'
 # dnsmasq configure file directory, default /etc/dnsmasq.d
 # dnsmasqConfigDir: '/etc/dnsmasq.d'
 
-# command to reload dnsmasq, default 'service dnsmasq restart'
-# dnsmasqReloadCommand: 'service dnsmasq restart'
+# config of dnsmasq reloading
+# <1> reloading by shell command (default)
+# dnsmasqReloaderConfig:
+#   type: 'cmd'
+#   command: 'service dnsmasq restart'
+# <2> reloading by http request
+# dnsmasqReloaderConfig:
+#   type: 'http'
+#   url: 'http://yourdomain/path'
+#   method: 'POST'
+#   header: 
+#     headerkey: 'headervalue'
+#   body: 'data'
 
 ################################## KcpTun configuration ##############################
 # is use kcptun, default false

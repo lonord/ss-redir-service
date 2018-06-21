@@ -5,6 +5,21 @@ import * as YAML from 'yamljs'
 import { configFile, configHome } from '../../universal/constant'
 import { SSMode } from '../types'
 
+export interface DnsmasqReloaderConfig {
+	type: 'cmd' | 'http'
+}
+
+export interface CmdDnsmasqReloaderConfig extends DnsmasqReloaderConfig {
+	command: string
+}
+
+export interface HttpDnsmasqReloaderConfig extends DnsmasqReloaderConfig {
+	url: string
+	method?: string
+	header?: { [x: string]: string }
+	body?: any
+}
+
 export interface OptionalConfigProps {
 	excludeIPList?: string[]
 	gfwIpsetName?: string
@@ -12,6 +27,7 @@ export interface OptionalConfigProps {
 	dnsTunPort?: number
 	dnsmasqConfigDir?: string
 	dnsmasqReloadCommand?: string
+	dnsmasqReloaderConfig?: DnsmasqReloaderConfig
 	enableKcpTun?: boolean
 	kcpTunRemote?: string
 	kcpTunLocalPort?: string
@@ -56,12 +72,27 @@ export default function createConfigManager(): ConfigManager {
 	}
 }
 
+export function isCmdDnsmasqReloaderConfig(cfg: DnsmasqReloaderConfig): cfg is CmdDnsmasqReloaderConfig {
+	return cfg.type === 'cmd'
+}
+
+export function isHttpDnsmasqReloaderConfig(cfg: DnsmasqReloaderConfig): cfg is HttpDnsmasqReloaderConfig {
+	return cfg.type === 'http'
+}
+
 function readConfig(configFilePath: string): ConfigProps {
 	const configObj = (YAML.parse(readFileSync(configFilePath, 'utf8')) || {}) as ConfigProps
-	return {
+	const o = {
 		...getDefaultConfig(),
 		...configObj
 	}
+	if (!o.dnsmasqReloaderConfig) {
+		o.dnsmasqReloaderConfig = {
+			type: 'cmd',
+			command: o.dnsmasqReloadCommand
+		} as CmdDnsmasqReloaderConfig
+	}
+	return o
 }
 
 function getDefaultConfig(): OptionalConfigProps {
