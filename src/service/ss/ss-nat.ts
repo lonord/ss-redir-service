@@ -4,6 +4,7 @@ import { writeFile } from 'fs'
 import * as _ from 'lodash'
 import { tmpdir } from 'os'
 import { join } from 'path'
+import { Writable } from 'stream'
 import { promisify } from 'util'
 import { SSMode } from '../../types'
 import createBaseService, { BaseService, BaseServiceOption } from '../base/base-service'
@@ -70,45 +71,37 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 			))
 			await execCommand(`${IPT} -A ${CHAIN_WAN_AC} -m set --match-set ${IPSET_WAN_IG} dst -j RETURN`)
 			// bypass client ip
-			if (bypassClientIPList.length > 0) {
-				await execIpsetActions(_.concat(
-					[
-						`create ${IPSET_LAN_AC} hash:net`
-					],
-					bypassClientIPList.map((ip) => `add ${IPSET_LAN_AC} ${ip}`)
-				))
-				await execCommand(`${IPT} -A ${CHAIN_WAN_AC} -m set --match-set ${IPSET_LAN_AC} src -j RETURN`)
-			}
+			await execIpsetActions(_.concat(
+				[
+					`create ${IPSET_LAN_AC} hash:net`
+				],
+				bypassClientIPList.map((ip) => `add ${IPSET_LAN_AC} ${ip}`)
+			))
+			await execCommand(`${IPT} -A ${CHAIN_WAN_AC} -m set --match-set ${IPSET_LAN_AC} src -j RETURN`)
 			// force forward client ip
-			if (forwardClientIPList.length > 0) {
-				await execIpsetActions(_.concat(
-					[
-						`create ${IPSET_LAN_FW} hash:net`
-					],
-					forwardClientIPList.map((ip) => `add ${IPSET_LAN_FW} ${ip}`)
-				))
-				await execCommand(`${IPT} -A ${CHAIN_WAN_AC} -m set --match-set ${IPSET_LAN_FW} src -j ${CHAIN_WAN_FW}`)
-			}
+			await execIpsetActions(_.concat(
+				[
+					`create ${IPSET_LAN_FW} hash:net`
+				],
+				forwardClientIPList.map((ip) => `add ${IPSET_LAN_FW} ${ip}`)
+			))
+			await execCommand(`${IPT} -A ${CHAIN_WAN_AC} -m set --match-set ${IPSET_LAN_FW} src -j ${CHAIN_WAN_FW}`)
 			// bypass ip
-			if (bypassIPList.length > 0) {
-				await execIpsetActions(_.concat(
-					[
-						`create ${IPSET_WAN_AC} hash:net`
-					],
-					bypassIPList.map((ip) => `add ${IPSET_WAN_AC} ${ip}`)
-				))
-				await execCommand(`${IPT} -A ${CHAIN_WAN_AC} -m set --match-set ${IPSET_WAN_AC} dst -j RETURN`)
-			}
+			await execIpsetActions(_.concat(
+				[
+					`create ${IPSET_WAN_AC} hash:net`
+				],
+				bypassIPList.map((ip) => `add ${IPSET_WAN_AC} ${ip}`)
+			))
+			await execCommand(`${IPT} -A ${CHAIN_WAN_AC} -m set --match-set ${IPSET_WAN_AC} dst -j RETURN`)
 			// force forward ip
-			if (forwardIPList.length > 0) {
-				await execIpsetActions(_.concat(
-					[
-						`create ${IPSET_WAN_FW} hash:net`
-					],
-					forwardIPList.map((ip) => `add ${IPSET_WAN_FW} ${ip}`)
-				))
-				await execCommand(`${IPT} -A ${CHAIN_WAN_AC} -m set --match-set ${IPSET_WAN_FW} dst -j ${CHAIN_WAN_FW}`)
-			}
+			await execIpsetActions(_.concat(
+				[
+					`create ${IPSET_WAN_FW} hash:net`
+				],
+				forwardIPList.map((ip) => `add ${IPSET_WAN_FW} ${ip}`)
+			))
+			await execCommand(`${IPT} -A ${CHAIN_WAN_AC} -m set --match-set ${IPSET_WAN_FW} dst -j ${CHAIN_WAN_FW}`)
 			// forward gfwlist ip
 			await execCommand(`${IPT} -A ${CHAIN_WAN_AC} -m set ! --match-set ${c.gfwIpsetName} dst -j RETURN`)
 		}
@@ -131,38 +124,24 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 		])
 	}
 
-	const refreshIpsetLanAC = async () => {
+	const refreshIpsetLan = async () => {
 		await execIpsetActions(_.concat(
 			[
-				`flush ${IPSET_LAN_AC}`
-			],
-			bypassClientIPList.map((ip) => `add ${IPSET_LAN_AC} ${ip}`)
-		))
-	}
-
-	const refreshIpsetWanAC = async () => {
-		await execIpsetActions(_.concat(
-			[
-				`flush ${IPSET_WAN_AC}`
-			],
-			bypassIPList.map((ip) => `add ${IPSET_WAN_AC} ${ip}`)
-		))
-	}
-
-	const refreshIpsetLanFW = async () => {
-		await execIpsetActions(_.concat(
-			[
+				`flush ${IPSET_LAN_AC}`,
 				`flush ${IPSET_LAN_FW}`
 			],
+			bypassClientIPList.map((ip) => `add ${IPSET_LAN_AC} ${ip}`),
 			forwardClientIPList.map((ip) => `add ${IPSET_LAN_FW} ${ip}`)
 		))
 	}
 
-	const refreshIpsetWanFW = async () => {
+	const refreshIpsetWan = async () => {
 		await execIpsetActions(_.concat(
 			[
+				`flush ${IPSET_WAN_AC}`,
 				`flush ${IPSET_WAN_FW}`
 			],
+			bypassIPList.map((ip) => `add ${IPSET_WAN_AC} ${ip}`),
 			forwardIPList.map((ip) => `add ${IPSET_WAN_FW} ${ip}`)
 		))
 	}
@@ -233,7 +212,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 				_.pull(bypassIPList, ip)
 			}
 			saveIPListSetting()
-			await refreshIpsetWanFW()
+			await refreshIpsetWan()
 		},
 		removeForwardIP: async (ip: string) => {
 			if (forwardIPList.indexOf(ip) === -1) {
@@ -244,7 +223,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 			]
 			_.pull(forwardIPList, ip)
 			saveIPListSetting()
-			await refreshIpsetWanFW()
+			await refreshIpsetWan()
 		},
 		getBypassIPList: () => {
 			return option.settingManager.getSetting().bypassIPList
@@ -261,7 +240,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 				_.pull(forwardIPList, ip)
 			}
 			saveIPListSetting()
-			await refreshIpsetWanAC()
+			await refreshIpsetWan()
 		},
 		removeBypassIP: async (ip: string) => {
 			if (bypassIPList.indexOf(ip) === -1) {
@@ -272,7 +251,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 			]
 			_.pull(bypassIPList, ip)
 			saveIPListSetting()
-			await refreshIpsetWanAC()
+			await refreshIpsetWan()
 		},
 		getForwardClientIPList: () => {
 			return option.settingManager.getSetting().forwardClientIPList
@@ -289,7 +268,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 				_.pull(bypassClientIPList, ip)
 			}
 			saveClientIPListSetting()
-			await refreshIpsetLanFW()
+			await refreshIpsetLan()
 		},
 		removeForwardClientIP: async (ip: string) => {
 			if (forwardClientIPList.indexOf(ip) === -1) {
@@ -300,7 +279,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 			]
 			_.pull(forwardClientIPList, ip)
 			saveClientIPListSetting()
-			await refreshIpsetLanFW()
+			await refreshIpsetLan()
 		},
 		getBypassClientIPList: () => {
 			return option.settingManager.getSetting().bypassClientIPList
@@ -317,7 +296,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 				_.pull(forwardClientIPList, ip)
 			}
 			saveClientIPListSetting()
-			await refreshIpsetLanAC()
+			await refreshIpsetLan()
 		},
 		removeBypassClientIP: async (ip: string) => {
 			if (bypassClientIPList.indexOf(ip) === -1) {
@@ -328,7 +307,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 			]
 			_.pull(bypassClientIPList, ip)
 			saveClientIPListSetting()
-			await refreshIpsetLanAC()
+			await refreshIpsetLan()
 		}
 	}
 }
@@ -345,19 +324,36 @@ async function execCommandWithInputContent(cmd: string, args: string[], lines: s
 	await new Promise((resolve) => {
 		const proc = spawn(cmd, args, {
 			cwd: binDir,
-			env: process.env,
-			stdio: ['pipe', 'ignore', 'ignore']
+			env: process.env
 		})
 		proc.on('close', resolve)
-		lines.map((line) => line + '\n').forEach((line) => {
-			proc.stdin.write(line)
-		})
-		proc.stdin.write('\x04')
+		writeLines(proc.stdin, lines.map((line) => line + '\n'))
 	})
 }
 
 async function execIpsetActions(actions: string[]): Promise<void> {
 	await execCommandWithInputContent('ipset', ['-!', '-'], actions)
+}
+
+async function writeLines(w: Writable, lines: string[]): Promise<void> {
+	for (const s of lines) {
+		await writeLine(w, s)
+	}
+	await new Promise((resolve) => {
+		w.end(resolve)
+	})
+}
+
+async function writeLine(w: Writable, line: string): Promise<void> {
+	await new Promise((resolve) => {
+		w.write(line, resolve)
+	})
+}
+
+async function wait(m: number): Promise<void> {
+	await new Promise((resolve) => {
+		setTimeout(resolve, m)
+	})
 }
 
 const internalBypassNetList = [
