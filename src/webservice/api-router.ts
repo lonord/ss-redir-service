@@ -48,6 +48,50 @@ export default function createAPIRouter(controller: ServiceController): Router {
 			await controller.setSSMode(mode)
 			ctx.body = 'OK'
 		})
+		.get('/iplist/forward', async (ctx) => {
+			ctx.body = await controller.getForwardIPList()
+		})
+		.put('/iplist/forward/:ip', async (ctx) => {
+			await controller.addForwardIP(ctx.params.ip)
+			ctx.body = 'OK'
+		})
+		.del('/iplist/forward/:ip', async (ctx) => {
+			await controller.removeForwardIP(ctx.params.ip)
+			ctx.body = 'OK'
+		})
+		.get('/iplist/bypass', async (ctx) => {
+			ctx.body = await controller.getBypassIPList()
+		})
+		.put('/iplist/bypass/:ip', async (ctx) => {
+			await controller.addBypassIP(ctx.params.ip)
+			ctx.body = 'OK'
+		})
+		.del('/iplist/bypass/:ip', async (ctx) => {
+			await controller.removeBypassIP(ctx.params.ip)
+			ctx.body = 'OK'
+		})
+		.get('/clientiplist/forward', async (ctx) => {
+			ctx.body = await controller.getForwardClientIPList()
+		})
+		.put('/clientiplist/forward/:ip', async (ctx) => {
+			await controller.addForwardClientIP(ctx.params.ip)
+			ctx.body = 'OK'
+		})
+		.del('/clientiplist/forward/:ip', async (ctx) => {
+			await controller.removeForwardClientIP(ctx.params.ip)
+			ctx.body = 'OK'
+		})
+		.get('/clientiplist/bypass', async (ctx) => {
+			ctx.body = await controller.getBypassClientIPList()
+		})
+		.put('/clientiplist/bypass/:ip', async (ctx) => {
+			await controller.addBypassClientIP(ctx.params.ip)
+			ctx.body = 'OK'
+		})
+		.del('/clientiplist/bypass/:ip', async (ctx) => {
+			await controller.removeBypassClientIP(ctx.params.ip)
+			ctx.body = 'OK'
+		})
 		.get('/gfwlist/user', async (ctx) => {
 			ctx.body = await controller.getUserGFWList()
 		})

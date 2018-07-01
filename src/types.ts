@@ -19,6 +19,18 @@ export interface ServiceController {
 	getStatus(): Promise<RunningStatus>
 	getSSMode(): Promise<SSMode>
 	setSSMode(mode: SSMode): Promise<void>
+	getForwardIPList(): Promise<string[]>
+	addForwardIP(ip: string): Promise<void>
+	removeForwardIP(ip: string): Promise<void>
+	getBypassIPList(): Promise<string[]>
+	addBypassIP(ip: string): Promise<void>
+	removeBypassIP(ip: string): Promise<void>
+	getForwardClientIPList(): Promise<string[]>
+	addForwardClientIP(ip: string): Promise<void>
+	removeForwardClientIP(ip: string): Promise<void>
+	getBypassClientIPList(): Promise<string[]>
+	addBypassClientIP(ip: string): Promise<void>
+	removeBypassClientIP(ip: string): Promise<void>
 	addUserGFWDomain(domain: string): Promise<void>
 	removeUserGFWDomain(domain: string): Promise<void>
 	validateGFWList(): Promise<void>

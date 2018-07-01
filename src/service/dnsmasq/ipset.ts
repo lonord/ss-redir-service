@@ -4,6 +4,8 @@ import createBaseService, { BaseService, BaseServiceOption } from '../base/base-
 
 const execAsync = promisify(exec)
 
+const SET_TIMEOUT = 3600 * 24
+
 export type IpsetService = BaseService
 
 export default function createIpsetService(option: BaseServiceOption): IpsetService {
@@ -12,7 +14,7 @@ export default function createIpsetService(option: BaseServiceOption): IpsetServ
 	const createIpset = async () => {
 		await removeIpset()
 		try {
-			await execAsync(`ipset create ${option.config.gfwIpsetName} hash:ip`)
+			await execAsync(`ipset create ${option.config.gfwIpsetName} hash:ip timeout ${SET_TIMEOUT}`)
 		} catch (err) {
 			// ignore
 		}
