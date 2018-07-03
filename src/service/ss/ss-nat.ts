@@ -57,19 +57,19 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 
 		// create access control chain
 		await execCommand(`${IPT} -N ${CHAIN_WAN_AC}`)
+		// internal ignore
+		await execIpsetActions(_.concat(
+			[
+				`create ${IPSET_WAN_IG} hash:net`
+			],
+			_.concat(
+				internalBypassNetList,
+				[c.serverHost],
+				c.excludeIPList
+			).map((ip) => `add ${IPSET_WAN_IG} ${ip}`)
+		))
+		await execCommand(`${IPT} -A ${CHAIN_WAN_AC} -m set --match-set ${IPSET_WAN_IG} dst -j RETURN`)
 		if (ssMode === 'auto') {
-			// internal ignore
-			await execIpsetActions(_.concat(
-				[
-					`create ${IPSET_WAN_IG} hash:net`
-				],
-				_.concat(
-					internalBypassNetList,
-					[c.serverHost],
-					c.excludeIPList
-				).map((ip) => `add ${IPSET_WAN_IG} ${ip}`)
-			))
-			await execCommand(`${IPT} -A ${CHAIN_WAN_AC} -m set --match-set ${IPSET_WAN_IG} dst -j RETURN`)
 			// bypass client ip
 			await execIpsetActions(_.concat(
 				[
