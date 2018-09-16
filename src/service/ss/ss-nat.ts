@@ -198,7 +198,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 			})
 		},
 		getForwardIPList: () => {
-			return option.settingManager.getSetting().forwardIPList
+			return forwardIPList
 		},
 		addForwardIP: async (ip: string) => {
 			if (forwardIPList.indexOf(ip) !== -1) {
@@ -226,7 +226,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 			await refreshIpsetWan()
 		},
 		getBypassIPList: () => {
-			return option.settingManager.getSetting().bypassIPList
+			return bypassIPList
 		},
 		addBypassIP: async (ip: string) => {
 			if (bypassIPList.indexOf(ip) !== -1) {
@@ -254,7 +254,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 			await refreshIpsetWan()
 		},
 		getForwardClientIPList: () => {
-			return option.settingManager.getSetting().forwardClientIPList
+			return forwardClientIPList
 		},
 		addForwardClientIP: async (ip: string) => {
 			if (forwardClientIPList.indexOf(ip) !== -1) {
@@ -282,7 +282,7 @@ export default function createSSNatService(option: BaseServiceOption): SSNatServ
 			await refreshIpsetLan()
 		},
 		getBypassClientIPList: () => {
-			return option.settingManager.getSetting().bypassClientIPList
+			return bypassClientIPList
 		},
 		addBypassClientIP: async (ip: string) => {
 			if (bypassClientIPList.indexOf(ip) !== -1) {

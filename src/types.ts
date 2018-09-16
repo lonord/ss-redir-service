@@ -37,5 +37,6 @@ export interface ServiceController {
 	invalidateGFWList(): Promise<void>
 	getUserGFWList(): Promise<string[]>
 	updateStandardGFWList(): Promise<void>
+	getStandardGFWListUpdateDate(): Promise<number>
 	getVersion(): Promise<string>
 }

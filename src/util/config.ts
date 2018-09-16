@@ -48,6 +48,7 @@ export interface SettingProps {
 	ssMode: SSMode
 	userGFWList: string[]
 	standardGFWList: string[]
+	standardGFWListUpdateDate: number
 	forwardIPList: string[]
 	bypassIPList: string[]
 	forwardClientIPList: string[]
@@ -120,6 +121,7 @@ function createSettingManager(settingFile: string): SettingManager {
 		standardGFWList: [
 			'google.com'
 		],
+		standardGFWListUpdateDate: 0,
 		forwardIPList: [],
 		bypassIPList: [],
 		forwardClientIPList: [],

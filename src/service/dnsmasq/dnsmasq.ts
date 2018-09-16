@@ -17,6 +17,7 @@ export interface DnsmasqService {
 	getUserGFWList(): string[]
 	addUserGFWDomain(domain: string): Promise<void>
 	removeUserGFWDomain(domain: string): Promise<void>
+	getStandardGFWListUpdateDate(): number
 	updateStandardGFWList(): Promise<void>
 	validateGFWList(): Promise<void>
 	invalidateGFWList(): Promise<void>
@@ -27,6 +28,7 @@ export default function createDnsmasqService(option: BaseServiceOption): Dnsmasq
 
 	let userGFWList = option.settingManager.getSetting().userGFWList
 	let standardGFWList = option.settingManager.getSetting().standardGFWList
+	let standardGFWListUpdateDate = option.settingManager.getSetting().standardGFWListUpdateDate
 
 	async function reloadDnsmasq() {
 		if (isCmdDnsmasqReloaderConfig(c.dnsmasqReloaderConfig)) {
@@ -88,10 +90,15 @@ export default function createDnsmasqService(option: BaseServiceOption): Dnsmasq
 			_.pull(userGFWList, domain)
 			saveUserGFWListSetting()
 		},
+		getStandardGFWListUpdateDate: () => {
+			return standardGFWListUpdateDate
+		},
 		updateStandardGFWList: async () => {
 			standardGFWList = await fetchGfwlist()
+			standardGFWListUpdateDate = new Date().getTime()
 			option.settingManager.updateSetting({
-				standardGFWList
+				standardGFWList,
+				standardGFWListUpdateDate
 			})
 		},
 		validateGFWList: async () => {

@@ -103,6 +103,9 @@ export default function createAPIRouter(controller: ServiceController): Router {
 			await controller.removeUserGFWDomain(ctx.params.domain)
 			ctx.body = 'OK'
 		})
+		.get('/gfwlist/standard/date', async (ctx) => {
+			ctx.body = await controller.getStandardGFWListUpdateDate()
+		})
 		.put('/action/gfwlist/validate', async (ctx) => {
 			await controller.validateGFWList()
 			ctx.body = 'OK'

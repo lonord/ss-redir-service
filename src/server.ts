@@ -49,6 +49,7 @@ const {
 	invalidateGFWList,
 	getUserGFWList,
 	updateStandardGFWList,
+	getStandardGFWListUpdateDate,
 	getBypassIPList,
 	getForwardIPList,
 	getBypassClientIPList,
@@ -110,6 +111,7 @@ const controller: ServiceController = {
 	invalidateGFWList,
 	getUserGFWList: async () => getUserGFWList(),
 	updateStandardGFWList,
+	getStandardGFWListUpdateDate: async () => getStandardGFWListUpdateDate(),
 	getVersion: async () => pkg.version
 }
 
